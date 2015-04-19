@@ -1,0 +1,57 @@
+<project name="RUSE-061251104" default="dist" basedir="."> 
+
+<!-- set global properties for this build -->
+<property name="src" value="src/main"/>
+<property name="build" value="bin"/>
+<property name="dist" value="."/> 
+<property name="doc.dir" value="doc/api"/>
+<property name="lib" value="C:/ruse/lib"/>
+
+<path id="lib.path">
+	<fileset dir="${lib}">
+		<include name="poi-3.1-FINAL-20080629.jar"/>
+		<include name="poi-scratchpad-3.1-FINAL-20080629.jar"/>
+	</fileset>
+</path>
+
+<target name="init" description="initing...">
+<!-- Create the time stamp -->
+ <tstamp/>
+<!-- Create the build directory structure used by compile -->
+ <mkdir dir="${build}"/>
+</target>
+ 
+<target name="compile" depends="init" description="compiling..." >
+<!-- Compile the java code from ${src} into ${build} -->
+ <javac srcdir="${src}" destdir="${build}" includes="**/*.java">
+ 	<classpath refid="lib.path">
+		</classpath>
+ </javac>
+</target>
+
+<target name="dist" depends="compile">
+<!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
+ <jar jarfile="ruse.jar" basedir="${build}">
+ <manifest>
+		<attribute name="Class-Path" value="file:///c:/ruse/lib/poi-3.1-FINAL-20080629.jar  file:///c:/ruse/lib/poi-scratchpad-3.1-FINAL-20080629.jar  "/>
+  </manifest>
+ </jar>
+</target>
+
+<target name="javadoc">
+  <mkdir dir="${doc.dir}"/> 
+  <javadoc destdir="${doc.dir}" >
+    <packageset dir="${src}">
+    </packageset>
+    <classpath refid="lib.path" />
+  </javadoc>
+</target>
+
+<target name="clean">
+<!-- Delete the ${build} and ${dist} directory trees -->
+ <delete dir="${build}"/>
+ <delete file="${dist}/ruse.jar"/>
+ <delete dir="doc/api"/>
+</target>
+
+</project>
